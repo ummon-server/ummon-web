@@ -1,6 +1,5 @@
 var express = require('express')
   , routes = require('./routes')
-  , api = require('./routes/api')
   , nunjucks = require('nunjucks')
   , http = require('http')
   , path = require('path');
@@ -32,10 +31,18 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/api/status', api.status);
+app.get('/login', routes.login);
+app.get('/', requireLogin, routes.dashboard);
 
 var server = http.createServer(app)
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+function requireLogin(req, res, next){
+	if (!req.session.url){
+		res.redirect('/login');
+	} else {
+		next();
+	}
+}
