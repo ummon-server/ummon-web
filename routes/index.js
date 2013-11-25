@@ -17,6 +17,5 @@ exports.dashboard = function(req, res){
 };
 
 exports.login = function(req, res){
-	req.session.url = 'http://localhost:8888';
 	res.render('login.html')
 }
