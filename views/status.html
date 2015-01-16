@@ -5,7 +5,57 @@
 
 {% block main %}
 
+<style>
+#workerBar {
+	width: 100px;
+	background-color: #afa;
+
+}
+#filledWorkerBar {
+	background-color: #3f3;
+}
+</style>
+
 <h1>Status</h1>
-<div>{{ data }}</div>
+<!-- <div>JSON: {{ json(data) }}</div> -->
+
+<div id="workerInfo" >Workers: {{data.workers.length}} active out of {{data.maxWorkers}} total</div>
+<!-- <div id="workerBar"><div id="filledWorkerBar" width="{{100 * data.workers.length / data.maxWorkers }}">f</div>o</div> -->
+
+
+<div id="collections">Collections:
+<ul>
+{% for collection in data.collections %}
+	<li><a href="/tasks/{{collection}}">{{collection}}</a></li>
+{% endfor %}
+</ul>
+
+<div id="activeWorkers">Tasks currently running:
+<ul>
+{% if data.workers.length==0 %}
+	<li>None</li>
+{% else %}
+	{% for task in data.workers %}
+		<li><a href="/log/task/{{ task }}">{{task}}</a></li>
+	{% endfor %}
+{% endif %}
+</ul>
+</div>
+
+
+<div id="activeWorkers">Tasks currently in the queue:
+<ul>
+{% if data.queue.length==0 %}
+	<li>None</li>
+{% else %}
+	{% for task in data.queue %}
+		<li><a href="/log/task/{{ task }}">{{task}}</a></li>
+	{% endfor %}
+{% endif %}
+</ul>
+</div>
+
+
 
 {% endblock %}
+

@@ -14,15 +14,20 @@ exports.status = function(req, res){
 	var api = getApi(req);
 
 	api.get('/status', function(err, req, rez, result) {
-		res.render('status.html',{ data: JSON.stringify(result) });
+		res.render('status.html',{ data: result, json: JSON.stringify });
 	});
 };
 exports.tasks = function(req, res){
 	var api = getApi(req);
 
 	api.get('/tasks', function(err, req, rez, result) {
-		console.log(rez.body);
-		console.log(result);
+		res.render('tasks.html',{ data: JSON.stringify(result) });
+	});
+};
+exports.tasksFilter = function(req, res){
+	var api = getApi(req);
+
+	api.get('/tasks?filter='+req.params.filter, function(err, req, rez, result) {
 		res.render('tasks.html',{ data: JSON.stringify(result) });
 	});
 };

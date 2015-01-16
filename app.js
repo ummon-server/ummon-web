@@ -34,6 +34,7 @@ if ('development' == app.get('env')) {
 app.get('/login', routes.login);
 app.get('/', requireLogin, routes.status);
 app.get('/tasks', requireLogin, routes.tasks);
+app.get('/tasks/:filter', requireLogin, routes.tasksFilter);
 app.get('/status', requireLogin, routes.status);
 app.get('/log/collection/:filter', requireLogin, routes.log_filter);
 app.get('/log/task/:filter', requireLogin, routes.log_filter);
