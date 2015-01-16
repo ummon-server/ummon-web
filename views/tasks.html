@@ -5,7 +5,35 @@
 
 {% block main %}
 
+<style>
+pre {
+	background-color: silver;
+}
+</style>
+
 <h1>Tasks</h1>
-<div>{{ data }}</div>
+<!-- <div>JSON: {{ json(data) }}</div> -->
+
+{% for collection in data.collections %}
+	<div class="collection {{ 'enabled' if collection.enabled else 'disabled' }}">
+	<h2>{{ collection.collection }}</h2>
+	Tasks:
+	<!-- {{ json(collection.tasks)}} -->
+	{% for foo, task in collection.tasks %}
+		<h3><a name="{{task.id}}"></a>{{task.id}}</h3>
+		Last successfully run: {{moment(task.lastSuccessfulRun).format()}}<br/>
+		Command: <pre>{{task.command}}</pre><br/>
+		{% if task.trigger.time %}
+			Trigger: <span title="Cron string: '{{task.trigger.time}}'">{{ prettycron.toString(task.trigger.time) }}</span>
+			<!-- Trigger enabled: {{"true" if task.trigger.enabled else "false"}} -->
+		{% elif task.trigger.after %}
+			Trigger: After completion of <a href="#{{task.trigger.after}}">{{task.trigger.after}}</a>
+		{% elif task.trigger.afterFailed %}
+			Trigger: After failure of <a href="#{{task.trigger.afterFailed}}">{{task.trigger.afterFailed}}</a>
+		{% endif %}
+	{% endfor %}
+
+	</div>
+{% endfor %}
 
 {% endblock %}

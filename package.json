@@ -11,6 +11,7 @@
     "less-middleware": "*",
     "moment": "^2.9.0",
     "nunjucks": "0.1.x",
+    "prettycron": "^0.10.0",
     "restify": "*"
   }
 }

@@ -1,5 +1,7 @@
 var restify = require('restify'),
-	moment = require('moment');
+	moment = require('moment'),
+	assert = require('assert'),
+	prettycron = require('prettycron')
 
 
 function getApi(req){
@@ -12,23 +14,20 @@ function getApi(req){
 
 exports.status = function(req, res){
 	var api = getApi(req);
+	console.log(req.session);
 
 	api.get('/status', function(err, req, rez, result) {
 		res.render('status.html',{ data: result, json: JSON.stringify });
 	});
 };
+
 exports.tasks = function(req, res){
 	var api = getApi(req);
 
-	api.get('/tasks', function(err, req, rez, result) {
-		res.render('tasks.html',{ data: JSON.stringify(result) });
-	});
-};
-exports.tasksFilter = function(req, res){
-	var api = getApi(req);
-
-	api.get('/tasks?filter='+req.params.filter, function(err, req, rez, result) {
-		res.render('tasks.html',{ data: JSON.stringify(result) });
+	api.get('/tasks'+(req.params.filter ? '/'+req.params.filter : ''), function(err, req, rez, result) {
+		assert.ifError(err);
+		console.log(rez.body);
+		res.render('tasks.html',{ data: result, json: JSON.stringify, prettycron: prettycron, moment: moment });
 	});
 };
 exports.log_filter = function(req, res){

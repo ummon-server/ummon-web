@@ -34,7 +34,7 @@ if ('development' == app.get('env')) {
 app.get('/login', routes.login);
 app.get('/', requireLogin, routes.status);
 app.get('/tasks', requireLogin, routes.tasks);
-app.get('/tasks/:filter', requireLogin, routes.tasksFilter);
+app.get('/tasks/:filter', requireLogin, routes.tasks);
 app.get('/status', requireLogin, routes.status);
 app.get('/log/collection/:filter', requireLogin, routes.log_filter);
 app.get('/log/task/:filter', requireLogin, routes.log_filter);
@@ -47,8 +47,13 @@ server.listen(app.get('port'), function(){
 
 function requireLogin(req, res, next){
   req.session.username='w2h';
-  req.session.password='science';
-  req.session.url='http://localhost:8888/';
+  req.session.password='cudozax!wa975394';
+  req.session.url='http://128.91.129.236:8080/';
+  
+  // req.session.username='w2h';
+  // req.session.password='science';
+  // req.session.url='http://localhost:8888/';
+
 	// if (!req.session.url){
 	// 	res.redirect('/login');
 	// } else {
