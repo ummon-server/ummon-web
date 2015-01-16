@@ -20,7 +20,7 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(require('less-middleware')({ src: __dirname + '/public' }));
+app.use(require('less-middleware')(__dirname + '/public' ));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.cookieParser());
 app.use(express.session({secret: 'secretsiwillnevertell'}));
@@ -32,7 +32,12 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/login', routes.login);
-app.get('/', requireLogin, routes.dashboard);
+app.get('/', requireLogin, routes.status);
+app.get('/tasks', requireLogin, routes.tasks);
+app.get('/status', requireLogin, routes.status);
+app.get('/log/collection/:filter', requireLogin, routes.log_filter);
+app.get('/log/task/:filter', requireLogin, routes.log_filter);
+app.get('/log/run/:runId', requireLogin, routes.log_display);
 
 var server = http.createServer(app)
 server.listen(app.get('port'), function(){
@@ -40,9 +45,12 @@ server.listen(app.get('port'), function(){
 });
 
 function requireLogin(req, res, next){
-	if (!req.session.url){
-		res.redirect('/login');
-	} else {
+  req.session.username='w2h';
+  req.session.password='science';
+  req.session.url='http://localhost:8888/';
+	// if (!req.session.url){
+	// 	res.redirect('/login');
+	// } else {
 		next();
-	}
+	// }
 }
