@@ -30,7 +30,7 @@ exports.tasks = function(req, res){
 		res.render('tasks.html',{ data: result, json: JSON.stringify, prettycron: prettycron, moment: moment });
 	});
 };
-exports.log_filter = function(req, res){
+exports.runs = function(req, res){
 	var api = getApi(req);
 	// console.log(req);
 
@@ -46,10 +46,10 @@ exports.log_filter = function(req, res){
 		// console.log(runs);
 
 
-		res.render('log_filter.html',{ data: JSON.stringify(runs) });
+		res.render('runs.html',{ data: JSON.stringify(runs) });
 	});
 };
-exports.log_display = function(req, res){
+exports.log = function(req, res){
 	var api = getApi(req);
 	// console.log(req);
 	var from = moment().subtract(1, 'day').toISOString();
@@ -60,7 +60,7 @@ exports.log_display = function(req, res){
 		rez.body.split('\n').forEach(function(item, n) {
 			item && log_entries.push(JSON.parse(item));
 		});
-		res.render('log_display.html',{ data: JSON.stringify(log_entries) });
+		res.render('log.html',{ data: JSON.stringify(log_entries) });
 	});
 };
 

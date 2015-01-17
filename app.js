@@ -36,9 +36,8 @@ app.get('/', requireLogin, routes.status);
 app.get('/tasks', requireLogin, routes.tasks);
 app.get('/tasks/:filter', requireLogin, routes.tasks);
 app.get('/status', requireLogin, routes.status);
-app.get('/log/collection/:filter', requireLogin, routes.log_filter);
-app.get('/log/task/:filter', requireLogin, routes.log_filter);
-app.get('/log/run/:runId', requireLogin, routes.log_display);
+app.get('/runs/:filter', requireLogin, routes.runs);
+app.get('/log/:filter', requireLogin, routes.log);
 
 var server = http.createServer(app)
 server.listen(app.get('port'), function(){

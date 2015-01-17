@@ -36,7 +36,7 @@
 	<li>None</li>
 {% else %}
 	{% for task in data.workers %}
-		<li><a href="/log/task/{{ task }}">{{task}}</a></li>
+		<li><a href="/runs/{{ task }}">{{task}}</a></li>
 	{% endfor %}
 {% endif %}
 </ul>
@@ -49,7 +49,7 @@
 	<li>None</li>
 {% else %}
 	{% for task in data.queue %}
-		<li><a href="/log/task/{{ task }}">{{task}}</a></li>
+		<li><a href="/runs/{{ task }}">{{task}}</a></li>
 	{% endfor %}
 {% endif %}
 </ul>
