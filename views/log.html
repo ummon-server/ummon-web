@@ -5,7 +5,32 @@
 
 {% block main %}
 
+<style>
+div.log {
+	/*background-color: #ddffdd;*/
+	margin:10px;
+}
+div.level_50 span.message {
+	background-color: purple;
+}
+
+div.level_50 span.message {
+	background-color: red;
+}
+div.level_30 span.message {
+	color: #00bbbb;
+}
+</style>
+
 <h1>Log - showing full output from task</h1>
-<div>{{ data }}</div>
+<!-- <div>{{ data }}</div> -->
+
+{% for entry in data %}
+	<div class="log level_{{entry.level}}">
+	<span class="time" title="{{entry.time}}">{{moment(entry.time).format('MMM D h:mm:ssA')}}</span>
+	<span class="message">{{entry.msg | replace("\n","<br/>") | safe}}</span>
+	<!-- {{json(entry)}} -->
+	</div>
+{% endfor %}
 
 {% endblock %}

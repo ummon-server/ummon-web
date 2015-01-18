@@ -4,8 +4,37 @@
 
 
 {% block main %}
+<style>
+li.run {
+	background-color: #ffdddd;
+	margin: 5px;
+}
+li.run.status_0 {
+	background-color: #ddffdd;
+}
+</style>
 
 <h1>Log - showing runs only</h1>
-<div>{{ data }}</div>
+<!-- <div>{{ json(data) }}</div> -->
+
+<ul>
+{% for line in data %}
+  <li class="run status_{{line.run.exitCode}}">
+	<strong>{{line.run.task.id}}</strong> (<a href="/log/{{line.run.id}}">View logs</a>)<br/>
+	<!-- <li>JSON:{{json(line)}}</li> -->
+	Queued {{moment(line.run.created).format('MMM D h:mmA')}},
+		started {{moment(line.run.started).format('h:mmA')}},
+		completed {{moment(line.run.completed).format('h:mmA')}}
+		({{ moment.duration(moment(line.run.started).diff(moment(line.run.completed))).humanize() }}).
+		Triggered by
+		{% if line.run.triggeredBy == "timer" %}
+			timer
+		{% else %}
+			<a class="trigger status_{{line.run.triggeredBy.exitCode}}" href="/log/{{line.run.triggeredBy.id}}">{{line.run.triggeredBy.task.id}}</a>
+		{% endif %}
+		<!-- {{json(line.run.triggeredBy)}} -->
+	<!-- <li>Exit status: {{line.run.exitCode}}</li> -->
+{% endfor %}
+</ul>
 
 {% endblock %}

@@ -29,19 +29,20 @@ exports.runs = function(req, res){
 		// console.log(runs);
 
 
-		res.render('runs.html',{ data: JSON.stringify(runs) });
+		res.render('runs.html',{ data: runs, json: JSON.stringify, moment: moment });
 	});
 };
 exports.log = function(req, res){
 	var from = moment().subtract(1, 'day').toISOString();
 
 
-	req.apiClient.get('/log?filter='+req.params.runId+'&from='+from, function(err, req, rez) {
+	req.apiClient.get('/log?filter='+req.params.filter+'&from='+from, function(err, req, rez) {
 		var log_entries = [];
 		rez.body.split('\n').forEach(function(item, n) {
 			item && log_entries.push(JSON.parse(item));
 		});
-		res.render('log.html',{ data: JSON.stringify(log_entries) });
+		// console.log(log_entries);
+		res.render('log.html',{ data: log_entries, json: JSON.stringify, moment: moment });
 	});
 };
 

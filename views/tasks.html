@@ -20,7 +20,7 @@ pre {
 	Tasks:
 	<!-- {{ json(collection.tasks)}} -->
 	{% for foo, task in collection.tasks %}
-		<h3><a name="{{task.id}}"></a>{{task.id}}</h3>
+		<h3><a name="{{task.id}}"></a>{{task.id}}</h3> <a href="/runs/{{task.id}}">View runs</a> <a href="/logs/{{task.id}}">View logs</a>
 		Last successfully run: {{moment(task.lastSuccessfulRun).format()}}<br/>
 		Command: <pre>{{task.command}}</pre><br/>
 		{% if task.trigger.time %}
