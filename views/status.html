@@ -16,12 +16,47 @@
 }
 </style>
 
-<h1>Status</h1>
+<h1>ummon-web - Home</h1>
 <!-- <div>JSON: {{ json(data) }}</div> -->
 
-<div id="workerInfo" >Workers: {{data.workers.length}} active out of {{data.maxWorkers}} total</div>
-<!-- <div id="workerBar"><div id="filledWorkerBar" width="{{100 * data.workers.length / data.maxWorkers }}">f</div>o</div> -->
+<script type="text/javascript">
+window.onload = function() {
+  document.getElementById("taskname").focus();
+};
 
+function jumpToTask() {
+  window.location.href = window.location.protocol + "//" + window.location.host + "/tasks/" + document.getElementById('taskname').value;
+  return false;
+}
+
+function jumpToRuns() {
+  window.location.href = window.location.protocol + "//" + window.location.host + "/runs/" + document.getElementById('runname').value;
+  return false;
+}
+</script>
+<form name="taskform" onsubmit="return jumpToTask();">
+Jump to task <input type="text" id="taskname" size="50"/>
+</form> 
+<br/>
+<form name="taskform" onsubmit="return jumpToRuns();">
+Jump to runs <input type="text" id="runname" size="50"/>
+</form>
+<br/>
+
+<hr>
+
+Workers: 
+{% if data.isPaused == false %}
+<span id="workerInfo" class="active" >{{data.workers.length}} active out of {{data.maxWorkers}} total</span>
+{% else %}
+<span id="workerInfo" class="inactive">Server is PAUSED, NO active workers</span>
+{% endif %}
+<!-- <div id="workerBar"><div id="filledWorkerBar" width="{{100 * data.workers.length / data.maxWorkers }}">f</div>o</div> -->
+<br/>
+Total tasks: {{ data.totalTasks }}
+<br/><br/>
+
+<hr>
 
 <div id="collections">Collections: (<a href="/tasks/">show all</a>)
 <ul>
@@ -29,6 +64,9 @@
 	<li><a href="/tasks/{{collection}}">{{collection}}</a></li>
 {% endfor %}
 </ul>
+</div>
+
+<hr>
 
 <div id="activeWorkers">Tasks currently running:
 <ul>
@@ -42,6 +80,7 @@
 </ul>
 </div>
 
+<hr>
 
 <div id="activeWorkers">Tasks currently in the queue:
 <ul>

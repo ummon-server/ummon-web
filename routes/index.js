@@ -10,10 +10,53 @@ exports.status = function(req, res){
 };
 
 exports.tasks = function(req, res){
-	req.apiClient.get('/tasks'+(req.params.filter ? '/'+req.params.filter : ''), function(err, req, rez, result) {
-		assert.ifError(err);
+	var apiCall = '/tasks';
+	if (typeof req.params.filter == 'string') {
+		apiCall += '/'+req.params.filter;
+	}
+	req.apiClient.get(apiCall, function(err, req, rez, result) {
+		if (err) {
+			res.render('error.html', { message: 'You requested tasks for an invalid collection' });
+			return;
+		}
 		// console.log(rez.body);
-		res.render('tasks.html',{ data: result, json: JSON.stringify, prettycron: prettycron, moment: moment });
+		var collectionSuccessRates = new Map();
+		var taskSuccessRates = new Map();
+		result.collections.forEach(function(collection, n) {
+			var numTaskRunsInCollection = 0;
+			var numSuccessfulTaskRunsInCollection = 0;
+			for(var taskName in collection.tasks) { 
+				if (collection.tasks.hasOwnProperty(taskName)) {
+					var task = collection.tasks[taskName];
+					var numTaskRuns = 0;
+					var numSuccessfulTaskRuns = 0;
+					for (i = 0; i < task.recentExitCodes.length; i++) {
+						numTaskRunsInCollection++;
+						numTaskRuns++;
+						if (task.recentExitCodes[i] == 0) {
+							numSuccessfulTaskRunsInCollection++;
+							numSuccessfulTaskRuns++;
+						}
+					}
+					if (numTaskRuns != 0) {
+						taskSuccessRates.set(task.id, Math.round(numSuccessfulTaskRuns / numTaskRuns * 100));
+					}
+					else {
+						taskSuccessRates.set(task.id, 0);
+					}
+				}
+			}
+			if (numTaskRunsInCollection != 0) {
+				collectionSuccessRates.set(collection.collection, 
+						Math.round(numSuccessfulTaskRunsInCollection / numTaskRunsInCollection * 100));
+			}
+			else {
+				collectionSuccessRates.set(collection.collection, 0);
+			}
+		});
+		
+		res.render('tasks.html',{ data: result, json: JSON.stringify, prettycron: prettycron, moment: moment,
+			taskSuccessRates: taskSuccessRates, collectionSuccessRates: collectionSuccessRates});
 	});
 };
 exports.runs = function(req, res){
