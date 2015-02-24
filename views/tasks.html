@@ -15,7 +15,7 @@
 	{% set collectionSuccessRate = collectionSuccessRates.get(collection.collection) %}
 	{% if collectionSuccessRate == 100 %}
 	<div class="stable">
-	{% elif collectionSuccessRate > 75 %}
+	{% elif collectionSuccessRate > 0 %}
 	<div class="semistable">
 	{% else %}
 	<div class="unstable">
@@ -41,14 +41,12 @@
 		{% endif %}
 		{% set taskSuccessRate = taskSuccessRates.get(task.id) %}
 		{% if taskSuccessRate == 100 %}
-		<div class="stable">
-		{% elif taskSuccessRate > 75 %}
-		<div class="semistable">
-		{% else %}
-		<div class="unstable">
+		<div class="stable">{{ taskSuccessRate }}%</div>
+		{% elif taskSuccessRate > 0 %}
+		<div class="semistable">{{ taskSuccessRate }}%</div>
+		{% elif taskSuccessRate != -1 %}
+		<div class="unstable">{{ taskSuccessRate }}%</div>
 		{% endif %}
-		{{ taskSuccessRate }}%
-		</div>
 		</h3>
 		<a href="/runs/{{task.id}}">View runs</a> <a href="/log/{{task.id}}">View logs</a>
 		Last successfully run: {{moment(task.lastSuccessfulRun).format()}}<br/>

@@ -16,7 +16,7 @@ exports.tasks = function(req, res){
 	}
 	req.apiClient.get(apiCall, function(err, req, rez, result) {
 		if (err) {
-			res.render('error.html', { message: 'You requested tasks for an invalid collection' });
+			res.render('error.html', { message: 'You requested task info for an invalid collection or task' });
 			return;
 		}
 		// console.log(rez.body);
@@ -42,7 +42,7 @@ exports.tasks = function(req, res){
 						taskSuccessRates.set(task.id, Math.round(numSuccessfulTaskRuns / numTaskRuns * 100));
 					}
 					else {
-						taskSuccessRates.set(task.id, 0);
+						taskSuccessRates.set(task.id, -1);
 					}
 				}
 			}
