@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+
+{% block bodyclass %}home{% endblock %}
+
+
+{% block main %}
+
+<h1>ummon-web - Tasks</h1>
+ <!-- div>JSON: {{ json(data) }}</div --> 
+
+{% for collection in data.collections %}
+	<div class="collection {{ 'enabled' if collection.enabled else 'disabled' }}">
+
+	<h2>{{ collection.collection }} 
+	{% set collectionSuccessRate = collectionSuccessRates.get(collection.collection) %}
+	{% if collectionSuccessRate == 100 %}
+	<div class="stable">
+	{% elif collectionSuccessRate > 0 %}
+	<div class="semistable">
+	{% else %}
+	<div class="unstable">
+	{% endif %}
+	{{ collectionSuccessRate }}%
+	</div>
+	{% if collection.config.enabled == false %}
+	<span class="inactive">This collection is DISABLED</span>
+	{% else %}
+	<span class="active">This collection is enabled</span>
+	{% endif %}
+	</h2>
+
+	Tasks:
+	<!-- {{ json(collection.tasks)}} -->
+	{% for foo, task in collection.tasks %}
+		<hr>
+		<h3><a name="{{task.id}}"></a>{{task.id}}
+		{% if task.enabled == false %}
+		<span class="inactive">DISABLED</span>
+		{% else %}
+		<span class="active">Enabled</span>
+		{% endif %}
+		{% set taskSuccessRate = taskSuccessRates.get(task.id) %}
+		{% if taskSuccessRate == 100 %}
+		<div class="stable">{{ taskSuccessRate }}%</div>
+		{% elif taskSuccessRate > 0 %}
+		<div class="semistable">{{ taskSuccessRate }}%</div>
+		{% elif taskSuccessRate != -1 %}
+		<div class="unstable">{{ taskSuccessRate }}%</div>
+		{% endif %}
+		</h3>
+		<a href="/runs/{{task.id}}">View runs</a> <a href="/log/{{task.id}}">View logs</a>
+		Last successfully run: {{moment(task.lastSuccessfulRun).format()}}<br/>
+		<br/>
+		Command: <pre>{{task.command}}</pre>
+		<br/>
+		{% if task.trigger.time %}
+			Trigger: <span title="Cron string: '{{task.trigger.time}}'">{{ prettycron.toString(task.trigger.time) }}</span>
+			<!-- Trigger enabled: {{"true" if task.trigger.enabled else "false"}} -->
+		{% elif task.trigger.after %}
+			Trigger: After completion of <a href="#{{task.trigger.after}}">{{task.trigger.after}}</a>
+		{% elif task.trigger.afterFailed %}
+			Trigger: After failure of <a href="#{{task.trigger.afterFailed}}">{{task.trigger.afterFailed}}</a>
+		{% endif %}
+		<br/><br/>
+	{% endfor %}
+	</div>
+{% endfor %}
+
+{% endblock %}
